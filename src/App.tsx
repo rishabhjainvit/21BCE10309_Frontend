@@ -1,53 +1,87 @@
 // App.js
-import React, { useState } from 'react';
-import SearchBar from './component/SearchBar';
+import React, { useState, useEffect } from 'react';
+// import SearchBar from './component/SearchBar';
 import TrademarkList from './component/TradeMarkList';
 import Sidebar from './component/SideBar';
 import Filters from './component/Filters';
 import Header from './component/Header';
 import TrademarkCard from './component/TrademarkCard';
-
+import nikeLogo from './assest/Capture.png';
+// import { fetchTrademarks } from './services/api'; 
 interface Trademark {
   id: number;
   mark: string;
   details: string;
   status: string;
-  imageSrc: string;  // Add imageSrc for each trademark
+  classInfo: string;
+  imageSrc: string;
 }
 
 const App: React.FC = () => {
-  const [trademarks, setTrademarks] = useState<Trademark[]>([
-    {
-      id: 1,
-      mark: 'Nike',
-      details: 'Retail Footwear',
-      status: 'Live',
-      imageSrc: '/path-to-image/nike-logo.png',
-    },
-    {
-      id: 2,
-      mark: 'Adidas',
-      details: 'Sports Apparel',
-      status: 'Registered',
-      imageSrc: '/path-to-image/adidas-logo.png',
-    },
-  ]);
+  const [trademarks, setTrademarks] = useState<Trademark[]>([]);
+  const [filteredTrademarks, setFilteredTrademarks] = useState<Trademark[]>([]);
 
-  const [filteredTrademarks, setFilteredTrademarks] = useState<Trademark[]>(trademarks);
+  useEffect(() => {
+    // Static data to replace the API
+    const staticTrademarks: Trademark[] = [
+      {
+        id: 1,
+        mark: 'Nike',
+        details: 'Nike sportswear and accessories.',
+        status: 'Registered',
+        classInfo: '25 - Clothing',
+        imageSrc: nikeLogo, // Static image source
+      },
+      {
+        id: 2,
+        mark: 'Nike',
+        details: 'Nike sportswear and accessories.',
+        status: 'Pending',
+        classInfo: '25 - Clothing',
+        imageSrc: nikeLogo, // You can add a different image
+      },
+      {
+        id: 3,
+        mark: 'Nike',
+        details: 'Nike sportswear and accessories.',
+        status: 'Registered',
+        classInfo: '9 - Electronics',
+        imageSrc: nikeLogo, // Same or different static image
+      },
+      {
+        id: 4,
+        mark: 'Nike',
+        details: 'Nike sportswear and accessories.',
+        status: 'Registered',
+        classInfo: '9 - Electronics',
+        imageSrc: nikeLogo, // Same or different static image
+      },
+      {
+        id: 5,
+        mark: 'Nike',
+        details: 'Nike sportswear and accessories.',
+        status: 'Registered',
+        classInfo: '9 - Electronics',
+        imageSrc: nikeLogo, // Same or different static image
+      },
+    ];
 
-  // Handle search input
+    // Set trademarks and filteredTrademarks with static data
+    setTrademarks(staticTrademarks);
+    setFilteredTrademarks(staticTrademarks);
+  }, []);
+
   const handleSearch = (query: string) => {
-    const result = trademarks.filter(trademark =>
+    const result = trademarks.filter((trademark) =>
       trademark.mark.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredTrademarks(result);
   };
 
-  // Handle filter change (sort by date or status)
   const handleFilterChange = (value: string) => {
     const sortedTrademarks = [...filteredTrademarks].sort((a, b) => {
       if (value === 'date') {
-        return a.id - b.id; // Replace with actual date logic
+        return a.id - b.id;
       } else if (value === 'status') {
         return a.status.localeCompare(b.status);
       }
@@ -86,32 +120,26 @@ const App: React.FC = () => {
 
   return (
     <div style={appStyle}>
-      {/* Header component */}
-      <Header />
-      
-      {/* Search Bar */}
-      <SearchBar onSearch={handleSearch} />
+      <Header /> {/* Add your Header component here */}
 
       <div style={contentStyle}>
         <div style={leftContentStyle}>
-          {/* Filters */}
-          <Filters onFilterChange={handleFilterChange} />
+          <Filters onFilterChange={handleFilterChange} /> {/* Filter functionality */}
 
-          {/* Trademark List: Render individual TrademarkCard components */}
-          {filteredTrademarks.map(trademark => (
+          {filteredTrademarks.map((trademark) => (
             <TrademarkCard
               key={trademark.id}
               mark={trademark.mark}
-              registrationNumber={trademark.id.toString()}  // Assuming id is the registration number
+              registrationNumber={trademark.id.toString()}
               status={trademark.status}
               description={trademark.details}
-              imageSrc={trademark.imageSrc}  // Image source for trademark
+              imageSrc={trademark.imageSrc}
+              classInfo={trademark.classInfo}
             />
           ))}
         </div>
 
         <div style={rightContentStyle}>
-          {/* Sidebar */}
           <Sidebar />
         </div>
       </div>
